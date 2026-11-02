@@ -1,0 +1,97 @@
+{
+  "duration" : 42,
+  "film" : {
+    "caption" : "42 seconds. Six suspects.",
+    "captions" : "media\/module-film.vtt",
+    "description" : "Actual native synthesis and ink, rendered as six studio sound studies. This is not headset footage or a spatial-audio demonstration. No microphone input or user recordings are used.",
+    "src" : "media\/module-film.mp4"
+  },
+  "modules" : [
+    {
+      "audio" : "media\/modules\/luna.m4a",
+      "description" : "borrowed sky.",
+      "duration" : 7,
+      "engine" : "luna",
+      "filmStart" : 0,
+      "id" : "luna",
+      "image" : "media\/modules\/luna.png",
+      "name" : "Almost Asleep",
+      "role" : "Harmony",
+      "seed" : "5a172026",
+      "slug" : "luna",
+      "soundDescription" : "Almost Asleep: A soft sustained chord slowly brightens and shimmers."
+    },
+    {
+      "audio" : "media\/modules\/glass-arp.m4a",
+      "description" : "no upstairs.",
+      "duration" : 7,
+      "engine" : "glassArp",
+      "filmStart" : 7,
+      "id" : "glassArp",
+      "image" : "media\/modules\/glass-arp.png",
+      "name" : "Small Doubts",
+      "role" : "Melody",
+      "seed" : "5a17be5d",
+      "slug" : "glass-arp",
+      "soundDescription" : "Small Doubts: Clear, bell-like notes rise and fall in a repeating pattern. The pulse gradually quickens."
+    },
+    {
+      "audio" : "media\/modules\/finger-bass.m4a",
+      "description" : "below, counting.",
+      "duration" : 7,
+      "engine" : "fingerBass",
+      "filmStart" : 14,
+      "id" : "fingerBass",
+      "image" : "media\/modules\/finger-bass.png",
+      "name" : "Below Thought",
+      "role" : "Foundation",
+      "seed" : "5a185c94",
+      "slug" : "finger-bass",
+      "soundDescription" : "Below Thought: Rounded low notes form a repeating bass line, with a brighter edge as the phrase develops."
+    },
+    {
+      "audio" : "media\/modules\/poly-perc.m4a",
+      "description" : "again. again.",
+      "duration" : 7,
+      "engine" : "polyPerc",
+      "filmStart" : 21,
+      "id" : "polyPerc",
+      "image" : "media\/modules\/poly-perc.png",
+      "name" : "Insistent Thought",
+      "role" : "Rhythm",
+      "seed" : "5a18facb",
+      "slug" : "poly-perc",
+      "soundDescription" : "Insistent Thought: Short, pitched taps step through a pattern. The pulses gradually quicken."
+    },
+    {
+      "audio" : "media\/modules\/seance.m4a",
+      "description" : "who’s there?",
+      "duration" : 7,
+      "engine" : "seance",
+      "filmStart" : 28,
+      "id" : "seance",
+      "image" : "media\/modules\/seance.png",
+      "name" : "Someone Else",
+      "role" : "Atmosphere",
+      "seed" : "5a199902",
+      "slug" : "seance",
+      "soundDescription" : "Someone Else: A close, gently beating chord opens in brightness."
+    },
+    {
+      "audio" : "media\/modules\/tape-hymn.m4a",
+      "description" : "folded memory.",
+      "duration" : 7,
+      "engine" : "tapeHymn",
+      "filmStart" : 35,
+      "id" : "tapeHymn",
+      "image" : "media\/modules\/tape-hymn.png",
+      "name" : "An Old Feeling",
+      "role" : "Texture",
+      "seed" : "5a1a3739",
+      "slug" : "tape-hymn",
+      "soundDescription" : "An Old Feeling: A sustained chord gently wavers with soft noise and tape-like flutter."
+    }
+  ],
+  "poster" : "media\/poster.jpg",
+  "provenance" : "Native synthesis engines and synchronized PixelCanvas artwork. Offline studio studies; not headset footage or a spatial-audio demonstration."
+}
