@@ -5,6 +5,9 @@
 (() => {
   const film = document.getElementById('module-film');
   const audio = document.getElementById('module-audio');
+  const filmURL = film?.querySelector('source')?.getAttribute('src') || 'media/module-film.mp4';
+  const revisionValue = document.documentElement.dataset.mediaRevision;
+  const mediaRevision = typeof revisionValue === 'string' && /^[a-zA-Z0-9_-]{1,64}$/.test(revisionValue) ? revisionValue : '';
   const media = [film, audio].filter(Boolean);
   let cancelFilmIntent = () => {};
   const pauseMedia = player => { if (player === film) cancelFilmIntent(); player.pause(); };
@@ -31,7 +34,7 @@
     restoreFilmFallback();
     filmStatus.replaceChildren(document.createTextNode('The embedded film could not load. '));
     const link = document.createElement('a');
-    link.href = 'media/module-film.mp4';
+    link.href = filmURL;
     link.textContent = 'Try opening the video directly.';
     filmStatus.append(link);
   };
@@ -100,7 +103,7 @@
           cancelFilmIntent(); film.pause(); sync();
           filmStatus.textContent = 'Playback did not start. Press Play to try again, or open the film directly.';
           const link = document.createElement('a');
-          link.href = 'media/module-film.mp4'; link.textContent = ' Open the film.'; filmStatus.append(link);
+          link.href = filmURL; link.textContent = ' Open the film.'; filmStatus.append(link);
         });
       } catch {
         cancelFilmIntent(); film.pause(); sync();
@@ -171,7 +174,9 @@
     try {
       const url = new URL(path, document.baseURI);
       const base = new URL('./', document.baseURI);
-      return url.origin === base.origin && url.pathname.startsWith(base.pathname) ? url.href : null;
+      if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)) return null;
+      if (mediaRevision) url.searchParams.set('v', mediaRevision);
+      return url.href;
     } catch { return null; }
   };
   const setPenText = (id, text) => {
@@ -228,7 +233,7 @@
     image.src = 'orchestra.svg';
     image.alt = 'An illustrated group of instruments. This individual drawing could not load.';
   });
-  fetch('media/manifest.json', { credentials: 'omit' })
+  fetch('media/manifest.json', { credentials: 'omit', cache: 'no-cache' })
     .then(response => {
       if (!response.ok) throw new Error('Manifest unavailable');
       return response.json();

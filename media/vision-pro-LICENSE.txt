@@ -1,0 +1,45 @@
+APPLE VISION PRO 3D MODEL — ATTRIBUTION AND MODIFICATIONS
+
+Applies to vision-pro.glb and vision-pro-fallback.png.
+This is a third-party representation, not an official Apple model.
+
+Required model credit
+This work is based on "Apple Vision Pro"
+https://sketchfab.com/3d-models/apple-vision-pro-08217e6a596848d0ababd15a1b328de7
+by pravinvamp (https://sketchfab.com/pravinvamp), licensed under
+Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Additional source credit retained from the uploader
+https://skfb.ly/oHXJ9
+Resolved upstream reference:
+https://sketchfab.com/3d-models/ar-code-1686060373323-44d4d2d952a342b2ac8b7ae5a18d08a1
+This reference is retained as historical provenance. The distributed source's
+current author and license declaration are reproduced below.
+
+Acquisition mirror (model data only; no website code copied)
+https://github.com/Yash-Shinde-24/ThreeJS-Quickstart/tree/master/models/apple_vision_pro
+
+Modifications for Spatial Synth Maestro — 2026-11-02
+- Consolidated scene/material draws and simplified the complete headset and band.
+  151,469 source triangles became 35,769 triangles; no component was removed.
+- Quantized supported vertex attributes using glTF Transform 4.5.1.
+- Embedded every texture as WebP. Most maps are 256px or smaller; four key
+  visor/band maps retain 512px detail. A uniform map was reduced to one pixel.
+- Centered the model, normalized its longest extent to 1, oriented its visor
+  toward +Z and its top toward +Y. All textures and geometry are inside the GLB.
+- Rendered a transparent 512px fallback from the same optimized model in Blender.
+
+Original downloaded license (verbatim)
+--------------------------------------
+Model Information:
+* title:	Apple Vision Pro
+* source:	https://sketchfab.com/3d-models/apple-vision-pro-08217e6a596848d0ababd15a1b328de7
+* author:	pravinvamp (https://sketchfab.com/pravinvamp)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Apple Vision Pro" (https://sketchfab.com/3d-models/apple-vision-pro-08217e6a596848d0ababd15a1b328de7) by pravinvamp (https://sketchfab.com/pravinvamp) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -75,7 +75,7 @@
       "role" : "Atmosphere",
       "seed" : "5a199902",
       "slug" : "seance",
-      "soundDescription" : "Someone Else: A close, gently beating chord opens in brightness."
+      "soundDescription" : "Someone Else: A hollow, choir-like chord slowly breathes and gently beats as it opens in brightness."
     },
     {
       "audio" : "media\/modules\/tape-hymn.m4a",
@@ -89,7 +89,7 @@
       "role" : "Texture",
       "seed" : "5a1a3739",
       "slug" : "tape-hymn",
-      "soundDescription" : "An Old Feeling: A sustained chord gently wavers with soft noise and tape-like flutter."
+      "soundDescription" : "An Old Feeling: A warm, reed-like chord drifts with slow wow, fine flutter, and faint tape hiss."
     }
   ],
   "poster" : "media\/poster.jpg",
