@@ -17,7 +17,7 @@
     return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
   }
 
-  function ink(seed) {
+  function ink(seed, sparse = false) {
     const next = random(seed);
     const centers = [[101, 129, 70, 61], [204, 106, 63, 65], [291, 151, 50, 57]];
     const marks = [];
@@ -34,12 +34,12 @@
       add(cx + bell() * sx, cy + bell() * sy, 2 + Math.floor(next() * (i % 9 === 0 ? 54 : 16)), 1 + Math.floor(next() * 7), i % 6 === 0);
     }
     for (let i = 0; i < 14; i++) add(40 + next() * 240, 64 + next() * 124, 38 + Math.floor(next() * 100), 1 + Math.floor(next() * 3), true);
-    return marks;
+    return sparse ? marks.filter((_, index) => index % 4 === 0) : marks;
   }
 
-  function fragments(seed) {
+  function fragments(seed, light = false) {
     const next = random(seed);
-    return [0, 1, 2, 3].map((_, index) => ({
+    const marks = [0, 1, 2, 3].map((_, index) => ({
       top: [12, 34, 61, 77][index] + Math.floor(next() * 8),
       height: [17, 24, 13, 12][index],
       x: +(next() * 50 - 25).toFixed(2),
@@ -51,6 +51,10 @@
       pitch: [-12, 16, -10, 22][index] + +(next() * 8 - 4).toFixed(2),
       yaw: [-20, 25, 12, -18][index] + +(next() * 12 - 6).toFixed(2)
     }));
+    // The cover leaves room for its hand; elsewhere the full misprint remains.
+    return light ? [marks[0], marks[3]].map(mark => ({
+      ...mark, x: mark.x * .55, y: mark.y * .5, stretch: 1 + (mark.stretch - 1) * .35
+    })) : marks;
   }
 
   function noisePlanes(seed) {
@@ -86,7 +90,7 @@
         Object.entries(plane).forEach(([key, value]) => svg.style.setProperty(`--plane-${key}`, `${value}${['pitch', 'yaw'].includes(key) ? 'deg' : key === 'z' ? 'px' : '%'}`));
         volume.append(svg); return svg;
       });
-      ink(localSeed).forEach((mark, index) => {
+      ink(localSeed, volume.dataset.noiseDensity === 'sparse').forEach((mark, index) => {
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         ['x', 'y', 'width', 'height'].forEach(key => rect.setAttribute(key, String(mark[key])));
         if (mark.hole) rect.setAttribute('class', 'paper-cut');
@@ -115,7 +119,7 @@
       }
       const { original, layer } = imageLayers.get(frame);
       frame.dataset.printed = 'true'; layer.replaceChildren();
-      fragments(Number(frame.dataset.shatter) ^ seed).forEach(mark => {
+      fragments(Number(frame.dataset.shatter) ^ seed, frame.dataset.fragments === 'light').forEach(mark => {
         const slice = document.createElement('span');
         slice.className = `image-fragment${mark.negative ? ' negative' : ''}${mark.duplicate ? ' duplicate' : ''}`;
         slice.style.setProperty('--slice-top', `${mark.top}%`);

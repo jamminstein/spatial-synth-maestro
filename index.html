@@ -20,6 +20,7 @@
 <script src="experience.js" defer></script>
 <script src="pen.js" defer></script>
 <script src="score.js" defer></script>
+<script src="gallery.js" defer></script>
 </head>
 <body class="experience-page">
 <a class="skip" href="#main">Skip to content</a>
@@ -29,17 +30,17 @@
 <section class="cover" data-depth-scene aria-labelledby="hero-heading">
   <figure class="cover-print">
     <div class="native-orchestra" aria-label="Explore six instrument drawings">
-      <svg class="orbit-lines" viewBox="0 0 1400 900" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M62-30v132h61v19H82v119m0 32v60h95v49h-31v149m0 17v48h52v34h-11v204M1261-18v113h-47v89m0 39v107h43v52h-29v151m0 33v156h52v196M284 61h216v32h-31v46h289v-41h162m-25 544H654v-39H438v57h-191"/><path class="blue-route" d="M40 418h203v-29h80v46h137v-17h211v37h196v-31h183m-21 24 21-24-37 2"/><path d="M241 278h116m23 0h26m29 0h197M936 156v169h-51v112h43v116M160 753h157v-23h412v31h187"/><path class="green-correction" d="M1061 671l119 19m-94-48 88 78M348 832q197-45 335 0"/></svg>
-      <div class="noise-mark cover-noise-a noise-volume" data-noise="81" aria-hidden="true"></div>
-      <div class="noise-mark cover-noise-b noise-volume" data-noise="262" aria-hidden="true"></div>
-      <a class="ink-instrument ink-luna" href="#listen" data-study="luna" aria-label="Explore Almost Asleep, harmony"><span class="ink-image" data-shatter="317"><img src="media/modules/luna-native.png" width="128" height="128" alt="Almost Asleep's native ink constellation." fetchpriority="high"></span><span class="instrument-name" data-pen>Almost Asleep</span></a>
-      <a class="ink-instrument ink-glass" href="#listen" data-study="glass-arp" aria-label="Explore Small Doubts, melody"><span class="ink-image" data-shatter="821"><img src="media/modules/glass-arp-native.png" width="128" height="128" alt="Small Doubts's native ink pattern."></span><span class="instrument-name" data-pen>Small Doubts</span></a>
-      <a class="ink-instrument ink-bass" href="#listen" data-study="finger-bass" aria-label="Explore Below Thought, foundation"><span class="ink-image" data-shatter="443"><img src="media/modules/finger-bass-native.png" width="128" height="128" alt="Below Thought's native ink pattern."></span><span class="instrument-name" data-pen>Below Thought</span></a>
-      <a class="ink-instrument ink-perc" href="#listen" data-study="poly-perc" aria-label="Explore Insistent Thought, rhythm"><span class="ink-image" data-shatter="109"><img src="media/modules/poly-perc-native.png" width="128" height="128" alt="Insistent Thought's native circles of ink."></span><span class="instrument-name" data-pen>Insistent Thought</span></a>
-      <a class="ink-instrument ink-seance" href="#listen" data-study="seance" aria-label="Explore Someone Else, atmosphere"><span class="ink-image" data-shatter="653"><img src="media/modules/seance-native.png" width="128" height="128" alt="Someone Else's native ink lines."></span><span class="instrument-name" data-pen>Someone Else</span></a>
-      <a class="ink-instrument ink-tape" href="#listen" data-study="tape-hymn" aria-label="Explore An Old Feeling, texture"><span class="ink-image" data-shatter="911"><img src="media/modules/tape-hymn-native.png" width="128" height="128" alt="An Old Feeling's native ink pattern."></span><span class="instrument-name" data-pen>An Old Feeling</span></a>
+      <svg class="orbit-lines" viewBox="0 0 1400 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M170 282h148m53 0h68v27h29M1002 589h124v-31h43M454 852h56v-18h39"/><path class="blue-route" d="M674 153v65m-7-12 7 12 11-8"/></svg>
+      <div class="noise-mark cover-noise-scar noise-volume" data-noise="81" data-noise-density="sparse" aria-hidden="true"></div>
+      <svg class="cover-hand" viewBox="0 0 380 500" aria-hidden="true" focusable="false"><path d="M114 472l-7-101-32-69-36-42q-11-17 5-27t35 7l31 29-11-139q-1-28 16-29t22 27l14 106-3-165q1-27 20-25t22 29l13 153 9-130q2-23 20-22t17 28l-3 144 22-91q7-20 22-15t11 29l-22 129-23 78-9 99"/><path d="M113 319q67-60 132-17M147 356l8 61m40-82 6 76M145 198l16 5m37-10 13 5M104 141l18 2"/><path class="blue-route" d="M36 144l31-27m-31 8 31-8-9 29M288 66l-20 19m26-6-26 6 10-25"/></svg>
+      <a class="ink-instrument ink-luna" href="#listen" data-study="luna" aria-label="Explore Almost Asleep, harmony"><span class="ink-image" data-shatter="317" data-fragments="light"><img src="media/modules/luna-native.png" width="128" height="128" alt="Almost Asleep's native ink constellation." fetchpriority="high"></span><span class="instrument-name" data-pen>Almost<br>Asleep</span></a>
+      <a class="ink-instrument ink-glass" href="#listen" data-study="glass-arp" aria-label="Explore Small Doubts, melody"><span class="ink-image" data-shatter="821" data-fragments="light"><img src="media/modules/glass-arp-native.png" width="128" height="128" alt="Small Doubts's native ink pattern."></span><span class="instrument-name" data-pen>Small<br>Doubts</span></a>
+      <a class="ink-instrument ink-bass" href="#listen" data-study="finger-bass" aria-label="Explore Below Thought, foundation"><span class="ink-image" data-shatter="443" data-fragments="light"><img src="media/modules/finger-bass-native.png" width="128" height="128" alt="Below Thought's native ink pattern."></span><span class="instrument-name" data-pen>Below<br>Thought</span></a>
+      <a class="ink-instrument ink-perc" href="#listen" data-study="poly-perc" aria-label="Explore Insistent Thought, rhythm"><span class="ink-image" data-shatter="109" data-fragments="light"><img src="media/modules/poly-perc-native.png" width="128" height="128" alt="Insistent Thought's native circles of ink."></span><span class="instrument-name" data-pen>Insistent<br>Thought</span></a>
+      <a class="ink-instrument ink-seance" href="#listen" data-study="seance" aria-label="Explore Someone Else, atmosphere"><span class="ink-image" data-shatter="653" data-fragments="light"><img src="media/modules/seance-native.png" width="128" height="128" alt="Someone Else's native ink lines."></span><span class="instrument-name" data-pen>Someone<br>Else</span></a>
+      <a class="ink-instrument ink-tape" href="#listen" data-study="tape-hymn" aria-label="Explore An Old Feeling, texture"><span class="ink-image" data-shatter="911" data-fragments="light"><img src="media/modules/tape-hymn-native.png" width="128" height="128" alt="An Old Feeling's native ink pattern."></span><span class="instrument-name" data-pen>An Old<br>Feeling</span></a>
     </div>
-    <figcaption class="sr-only">The app's native drawings, cut and rearranged into a changing illustration. This is artwork, not a headset screenshot. Choose a drawing to explore its sound; selection does not start playback.</figcaption>
+    <figcaption class="sr-only">A black hand reaches between six native instrument drawings. This changing illustration is artwork, not a headset screenshot. Choose a drawing to explore its sound; selection does not start playback.</figcaption>
   </figure>
   <div class="misprint-control"><button type="button" id="misprint-again" disabled aria-label="Misprint the illustration again. Changes artwork only." aria-describedby="misprint-status"><span data-pen>misprint again</span><span aria-hidden="true">↻</span></button><p class="sr-only" id="misprint-status" role="status" aria-live="polite">A new print. The instruments are unchanged.</p></div>
 </section>
@@ -47,6 +48,14 @@
 <section class="film-section shell" data-depth-scene id="watch" aria-labelledby="film-heading">
   <h2 id="film-heading" class="film-note" data-pen>listen.</h2>
   <figure class="module-film"><video id="module-film" controls playsinline preload="metadata" poster="media/poster.jpg" aria-label="Six native synthesizer sound studies" aria-describedby="film-caption film-description"><source src="media/module-film.mp4" type="video/mp4"><track kind="captions" src="media/module-film.vtt" srclang="en" label="English sound descriptions"><p>Your browser cannot show this video. <a href="media/module-film.mp4">Open the module film</a>.</p></video><figcaption class="sr-only" id="film-caption">42 seconds. Six suspects.</figcaption></figure>
+  <div class="film-transport" id="film-transport" role="group" aria-label="Film playback" hidden>
+    <button type="button" id="film-toggle" aria-label="Play film" aria-controls="module-film">play</button>
+    <label class="sr-only" for="film-seek">Seek through the film</label><input class="film-scrubber" id="film-seek" type="range" min="0" max="42" step="0.1" value="0" aria-controls="module-film" disabled>
+    <output id="film-time" aria-live="off" aria-label="Film playback time">0:00 / 0:42</output>
+    <button type="button" id="film-mute" aria-label="Mute film" aria-controls="module-film" aria-pressed="false">sound</button>
+    <label class="sr-only" for="film-volume">Film volume</label><input id="film-volume" type="range" min="0" max="1" step="0.05" value="1" aria-controls="module-film">
+    <button type="button" id="film-captions" aria-label="Show sound descriptions" aria-controls="module-film" aria-pressed="false">words</button>
+  </div>
   <p class="media-message" id="film-status" role="status"></p>
   <p id="film-description" class="sr-only">Actual native synthesis and ink, rendered as six studio sound studies. This is not headset footage or a spatial-audio demonstration. No microphone input or user recordings are used.</p>
 </section>
@@ -68,7 +77,8 @@
 </section>
 <section class="concept-portal shell" data-depth-scene aria-labelledby="elsewhere-heading">
   <h2 id="elsewhere-heading" data-pen>elsewhere.</h2>
-  <figure><div class="portal-space"><div class="portal-world"><div class="portal-outline" aria-hidden="true"></div><div class="portal-window"><img src="media/concept-studio.png" width="1586" height="992" loading="lazy" alt="Concept artwork: an imagined sunlit studio with floating ink forms. This is not a screenshot of the app."></div><div class="portal-edge" aria-hidden="true"></div></div></div><figcaption>concept image</figcaption></figure>
+  <figure aria-label="Generated concept art gallery"><div class="portal-space"><div class="portal-world"><div class="portal-outline" aria-hidden="true"></div><div class="portal-window" id="concept-frame"><img id="concept-image" src="media/concept-tidal.webp" width="2048" height="1152" loading="lazy" alt="AI-generated concept art: a worn tiled room with still water, a narrow concrete walkway and suspended ink loops. An imagined setting, not app or headset footage."></div><div class="portal-edge" aria-hidden="true"></div></div></div><figcaption><span>concept images</span><span class="concept-controls" id="concept-controls" role="group" aria-label="Concept image navigation" hidden><button type="button" id="concept-previous" aria-label="Previous generated concept image" aria-controls="concept-frame">←</button><output id="concept-count" aria-live="off" aria-label="Concept image">1 / 4</output><button type="button" id="concept-next" aria-label="Next generated concept image" aria-controls="concept-frame">→</button></span></figcaption></figure>
+  <p class="sr-only" id="concept-status" role="status" aria-live="polite"></p>
 </section>
 <section class="depth-section" data-depth-scene id="how" aria-labelledby="how-heading">
   <div class="shell depth-title"><h2 id="how-heading"><span data-pen>one hand.</span><br><span data-pen>new consequences.</span></h2></div>
