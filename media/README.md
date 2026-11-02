@@ -25,3 +25,15 @@ were generated with OpenAI `gpt-image-2` through the API on November 2, 2026, at
 2048 × 1152 with high quality. They are imagined environments with floating ink forms,
 not app screenshots, recorded headset footage or demonstrations of the app's rendering.
 The original studio concept remains the fourth image in that separate gallery.
+Its gallery copy, `concept-studio.webp`, is a high-quality WebP compression of the
+original `concept-studio.png`, with the same dimensions and artwork. The original
+PNG is retained alongside it.
+
+<!-- headset-lighting-provenance -->
+
+The rotating headset uses the credited community model described in
+`vision-pro-LICENSE.txt`. `headset-room.pmrem.gz` stores its existing Three.js
+RoomEnvironment lighting as losslessly packed linear half-float cube faces and
+roughness levels. The loader restores the original HDR values and full mip chain;
+this is generated lighting data, not a photograph or a replacement headset image.
+The same room generator remains available when the packed data cannot be used.

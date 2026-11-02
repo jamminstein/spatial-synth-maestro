@@ -346,7 +346,11 @@
     if (!document || installed.has(document)) return;
     installed.add(document);
     let seed = uint(document.documentElement?.dataset?.printSeed);
-    const drawAll = () => document.querySelectorAll('[data-pen]').forEach(element => render(document, element, seed));
+    let initialDrawn = false;
+    const drawAll = () => {
+      document.querySelectorAll('[data-pen]').forEach(element => render(document, element, seed));
+      initialDrawn = true;
+    };
     document.addEventListener('maestro:misprint', event => {
       seed = uint(event.detail?.seed);
       drawAll();
@@ -356,7 +360,11 @@
       if (typeof detail.text !== 'string' || !detail.element || detail.element.ownerDocument !== document || !detail.element.hasAttribute('data-pen')) return;
       render(document, detail.element, detail.seed === undefined ? seed : uint(detail.seed), detail.text);
     });
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', drawAll, { once: true });
+    // The following deferred score script supplies the fresh initial seed.
+    // Leave semantic text intact until then, with a standalone DOM-ready fallback.
+    if (document.readyState === 'loading' || document.currentScript?.defer) {
+      document.addEventListener('DOMContentLoaded', () => { if (!initialDrawn) drawAll(); }, { once: true });
+    }
     else drawAll();
   }
 

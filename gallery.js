@@ -10,7 +10,7 @@
       alt: 'AI-generated concept art: a curved concrete room beneath an oval opening to a cloudy sky, with suspended ink lines and dots. An imagined setting, not app or headset footage.' },
     { src: 'media/concept-night.webp', width: 2048, height: 1152, name: 'night glass',
       alt: 'AI-generated concept art: a dim glass-roofed conservatory with weathered window frames, bare trees outside and suspended ink loops and lines. An imagined setting, not app or headset footage.' },
-    { src: 'media/concept-studio.png', width: 1586, height: 992, name: 'sunlit studio',
+    { src: 'media/concept-studio.webp', width: 1586, height: 992, name: 'sunlit studio',
       alt: 'AI-generated concept art: an imagined sunlit studio with floating ink forms. An imagined setting, not app or headset footage.' }
   ];
   // Native engine glyphs are composed on transparent planes, not paper tiles.
@@ -42,6 +42,16 @@
       routes: ['M379 210h94v29h127m11 0h21m-70 199h74v-43', 'M226 431h83v-29h96m-12-7 12 7-13 3'] }
   ];
   const NS = 'http://www.w3.org/2000/svg';
+  function nativeAsset(source, document) {
+    const revision = document?.documentElement?.dataset?.mediaRevision;
+    if (typeof source !== 'string' || !/^media\/modules\/[a-z0-9-]+-native\.png(?:[?#]|$)/.test(source) ||
+        typeof revision !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(revision)) return source;
+    const [address, fragment] = source.split('#', 2), question = address.indexOf('?');
+    const pathname = question < 0 ? address : address.slice(0, question);
+    const query = new URLSearchParams(question < 0 ? '' : address.slice(question + 1));
+    query.set('v', revision);
+    return `${pathname}?${query}${fragment === undefined ? '' : `#${fragment}`}`;
+  }
   function overlayNodes(document, composition) {
     const nodes = [];
     const routes = document.createElementNS(NS, 'svg');
@@ -53,7 +63,7 @@
     });
     nodes.push(routes);
     const nativeImage = slug => {
-      const img = document.createElement('img'); img.src = `media/modules/${slug}-native.png`;
+      const img = document.createElement('img'); img.src = nativeAsset(`media/modules/${slug}-native.png`, document);
       img.width = 128; img.height = 128; img.alt = ''; img.setAttribute('aria-hidden', 'true'); img.decoding = 'async';
       return img;
     };
@@ -140,5 +150,5 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => install(document), { once: true });
     else install(document);
   }
-  if (typeof module !== 'undefined' && module.exports) module.exports = { images, compositions, overlayNodes, install };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { nativeAsset, images, compositions, overlayNodes, install };
 })();

@@ -66,6 +66,15 @@
       x: +(next() * 12 - 6).toFixed(2), y: +(next() * 10 - 5).toFixed(2)
     }));
   }
+  // Keep every rectangle and its depth assignment. Same-winding subpaths use
+  // nonzero fill, so overlapping ink and mask cuts retain their vector union.
+  function noisePaths(marks) {
+    const planes = Array.from({ length: 3 }, () => ({ ink: [], holes: [] }));
+    marks.forEach((mark, index) => {
+      planes[index % 3][mark.hole ? 'holes' : 'ink'].push(`M${mark.x} ${mark.y}h${mark.width}v${mark.height}h${-mark.width}Z`);
+    });
+    return planes.map(plane => ({ ink: plane.ink.join(''), holes: plane.holes.join('') }));
+  }
   function ribbons(seed) {
     const next = random(seed);
     return [-190, -65, 24, 156, 88].map((z, index) => ({
@@ -154,9 +163,11 @@
         noise: stage.querySelector('[data-cover-noise]'), routes: stage.querySelector('[data-cover-routes]') };
       coverStates.set(stage, state);
     }
+    if (state.seed === seed && state.width === rect.width && state.height === rect.height) return;
     const options = state.seed === seed ? { shift: state.shift } : { previousShift: state.shift };
     const plan = coverComposition(seed, rect.width, rect.height, options);
-    state.seed = seed; state.shift = plan.shift; stage.dataset.coverFamily = String(plan.family);
+    state.seed = seed; state.shift = plan.shift; state.width = rect.width; state.height = rect.height;
+    stage.dataset.coverFamily = String(plan.family);
     const set = (node, prefix, properties) => {
       if (!node) return;
       for (const [key, value] of Object.entries(properties)) {
@@ -185,11 +196,21 @@
     } else environment.addEventListener?.('resize', () => stages.forEach(refresh), { passive: true });
   }
 
+  function nativeAsset(source, document) {
+    const revision = document?.documentElement?.dataset?.mediaRevision;
+    if (typeof source !== 'string' || !/^media\/modules\/[a-z0-9-]+-native\.png(?:[?#]|$)/.test(source) ||
+        typeof revision !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(revision)) return source;
+    const [address, fragment] = source.split('#', 2), question = address.indexOf('?');
+    const pathname = question < 0 ? address : address.slice(0, question);
+    const query = new URLSearchParams(question < 0 ? '' : address.slice(question + 1));
+    query.set('v', revision);
+    return `${pathname}?${query}${fragment === undefined ? '' : `#${fragment}`}`;
+  }
   function decorate(document, seed) {
     document.querySelectorAll('[data-cover-stage]').forEach(stage => applyCover(stage, seed));
     document.querySelectorAll('[data-noise]').forEach((volume, volumeIndex) => {
-      volume.replaceChildren();
       const localSeed = Number(volume.dataset.noise) ^ seed;
+      const paths = noisePaths(ink(localSeed, volume.dataset.noiseDensity === 'sparse'));
       const surfaces = noisePlanes(localSeed).map((plane, planeIndex) => {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('class', 'noise-plane'); svg.setAttribute('viewBox', '0 0 400 240');
@@ -204,16 +225,16 @@
         paper.setAttribute('width', '400'); paper.setAttribute('height', '240'); paper.setAttribute('fill', 'white');
         mask.append(paper); defs.append(mask);
         const drawing = document.createElementNS('http://www.w3.org/2000/svg', 'g'); drawing.setAttribute('mask', `url(#${maskID})`);
-        svg.append(defs); svg.append(drawing); volume.append(svg); return { mask, drawing };
+        for (const [kind, target, className] of [['ink', drawing, 'ink-mark'], ['holes', mask, 'ink-hole']]) {
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('class', className); path.setAttribute('d', paths[planeIndex][kind]);
+          path.setAttribute('fill-rule', 'nonzero');
+          if (kind === 'holes') path.setAttribute('fill', 'black');
+          target.append(path);
+        }
+        svg.append(defs); svg.append(drawing); return svg;
       });
-      ink(localSeed, volume.dataset.noiseDensity === 'sparse').forEach((mark, index) => {
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        ['x', 'y', 'width', 'height'].forEach(key => rect.setAttribute(key, String(mark[key])));
-        rect.setAttribute('class', mark.hole ? 'ink-hole' : 'ink-mark');
-        if (mark.hole) rect.setAttribute('fill', 'black');
-        const surface = surfaces[index % surfaces.length];
-        (mark.hole ? surface.mask : surface.drawing).append(rect);
-      });
+      volume.replaceChildren(...surfaces);
     });
     document.querySelectorAll('[data-ribbons]').forEach(world => {
       world.replaceChildren();
@@ -222,7 +243,7 @@
         Object.entries(plan).forEach(([key, value]) => ribbon.style.setProperty(`--ribbon-${key}`, `${value}${['pitch', 'yaw', 'roll'].includes(key) ? 'deg' : ['z', 'height'].includes(key) ? 'px' : '%'}`));
         const face = document.createElement('span'); face.className = 'ribbon-face';
         const drawing = document.createElement('img');
-        drawing.src = index % 2 ? 'media/modules/poly-perc-native.png' : 'media/modules/seance-native.png';
+        drawing.src = nativeAsset(index % 2 ? 'media/modules/poly-perc-native.png' : 'media/modules/seance-native.png', document);
         drawing.alt = ''; drawing.width = 128; drawing.height = 128; drawing.setAttribute('aria-hidden', 'true');
         face.append(drawing); ribbon.append(face); world.append(ribbon);
       });
@@ -237,6 +258,7 @@
       }
       const { original, layer } = imageLayers.get(frame);
       frame.dataset.printed = 'true'; layer.replaceChildren();
+      const source = nativeAsset(original.getAttribute('src'), document);
       fragments(Number(frame.dataset.shatter) ^ seed, frame.dataset.fragments === 'light').forEach(mark => {
         const slice = document.createElement('span');
         slice.className = `image-fragment${mark.negative ? ' negative' : ''}${mark.duplicate ? ' duplicate' : ''}`;
@@ -249,7 +271,7 @@
         slice.style.setProperty('--slice-pitch', `${mark.pitch}deg`);
         slice.style.setProperty('--slice-yaw', `${mark.yaw}deg`);
         const copy = document.createElement('img');
-        copy.src = original.getAttribute('src'); copy.alt = ''; copy.width = 128; copy.height = 128;
+        copy.src = source; copy.alt = ''; copy.width = 128; copy.height = 128;
         copy.setAttribute('aria-hidden', 'true');
         slice.append(copy); layer.append(slice);
       });
@@ -308,5 +330,5 @@
     });
   }
   if (typeof document !== 'undefined') install(document);
-  if (typeof module !== 'undefined' && module.exports) module.exports = { ink, fragments, decorate, install, nextSeed, freshSeed, depthPose, installDepth, noisePlanes, ribbons, coverComposition, coverDepthPose };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { nativeAsset, ink, fragments, decorate, install, nextSeed, freshSeed, depthPose, installDepth, noisePlanes, noisePaths, ribbons, coverComposition, coverDepthPose };
 })();

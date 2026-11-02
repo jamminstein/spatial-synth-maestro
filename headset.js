@@ -2,6 +2,7 @@ import * as THREE from './vendor/three/three.module.js';
 import { GLTFLoader } from './vendor/three/GLTFLoader.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
 import { attachTrackball, demandFrames } from './headset-controls.mjs';
+import { createEnvironmentDecoder, createEnvironmentTexture, fetchEnvironmentBytes } from './headset-environment.mjs';
 
 // Local community mesh, embedded textures, direct manipulation. No animation
 // mixer, idle loop, autospin, inertia, audio, CDN or remote environment map.
@@ -12,7 +13,10 @@ const status = document.getElementById('headset-status');
 
 if (surface && canvas && fallback && status) {
   let renderer, scene, environmentMap, model, controls, resizeObserver, frames;
-  let disposed = false, failed = false, ready = false;
+  let disposed = false, failed = false, ready = false, preparing = false, prepared = false;
+  const environmentAbort = new AbortController();
+  let environmentLoading = false, environmentFailed = false, environmentBytes = null;
+  let environmentDecoder = null, environmentChannel = null, environmentTaskQueued = false;
   const listeners = [];
   const listen = (target, event, callback, options) => {
     target.addEventListener(event, callback, options);
@@ -20,6 +24,7 @@ if (surface && canvas && fallback && status) {
   };
   const showFallback = () => {
     failed = true;
+    environmentAbort.abort(); clearEnvironmentPreparation();
     controls?.dispose(); controls = null;
     frames?.stop();
     canvas.hidden = true; fallback.hidden = false;
@@ -42,9 +47,14 @@ if (surface && canvas && fallback && status) {
     materials.forEach(material => material.dispose());
     geometries.forEach(geometry => geometry.dispose());
   }
+  function clearEnvironmentPreparation() {
+    environmentBytes = null; environmentDecoder = null; environmentTaskQueued = false;
+    environmentChannel?.port1.close(); environmentChannel?.port2.close(); environmentChannel = null;
+  }
   function dispose() {
     if (disposed) return;
     disposed = true;
+    environmentAbort.abort(); clearEnvironmentPreparation();
     controls?.dispose(); resizeObserver?.disconnect(); frames?.dispose();
     listeners.forEach(remove => remove());
     disposeObject(model);
@@ -72,18 +82,67 @@ if (surface && canvas && fallback && status) {
     const key = new THREE.DirectionalLight(0xffffff, 3.5); key.position.set(-3, 4, 5); scene.add(key);
     const fill = new THREE.DirectionalLight(0xdce9ff, 1.5); fill.position.set(4, 1, 2); scene.add(fill);
     const rim = new THREE.DirectionalLight(0xffffff, 2.4); rim.position.set(1, 3, -4); scene.add(rim);
-    const room = new RoomEnvironment();
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    environmentMap = pmrem.fromScene(room, .06);
-    scene.environment = environmentMap.texture;
     scene.environmentIntensity = .85;
-    room.dispose(); pmrem.dispose();
+    function finishEnvironment(resource) {
+      environmentMap = resource;
+      scene.environment = resource.texture || resource;
+      clearEnvironmentPreparation();
+      prepareModel();
+    }
+    function advanceEnvironment() {
+      if (disposed || failed || document.hidden || !environmentDecoder) return;
+      try {
+        const next = environmentDecoder.next();
+        if (next.done) { finishEnvironment(createEnvironmentTexture(THREE, next.value)); return; }
+        // Finite preparation only: yield after at most16,384 texels so the page
+        // can paint/respond. A hidden page retains its cursor without polling.
+        if (!environmentChannel) {
+          environmentChannel = new MessageChannel();
+          environmentChannel.port1.onmessage = () => {
+            environmentTaskQueued = false; advanceEnvironment();
+          };
+        }
+        environmentTaskQueued = true; environmentChannel.port2.postMessage(0);
+      } catch {
+        clearEnvironmentPreparation(); environmentFailed = true; prepareEnvironment();
+      }
+    }
+    function prepareEnvironment() {
+      if (disposed || failed || document.hidden || environmentMap || environmentTaskQueued) return;
+      if (environmentDecoder) { advanceEnvironment(); return; }
+      if (environmentBytes) {
+        environmentDecoder = createEnvironmentDecoder(environmentBytes); environmentBytes = null;
+        advanceEnvironment(); return;
+      }
+      if (environmentFailed) {
+        // Preserve the original lighting path on older browsers or a failed,
+        // unsupported or corrupt asset. This fallback may compile synchronously.
+        let room, pmrem;
+        try {
+          room = new RoomEnvironment(); pmrem = new THREE.PMREMGenerator(renderer);
+          finishEnvironment(pmrem.fromScene(room, .06));
+        } catch { showFallback(); }
+        finally { room?.dispose(); pmrem?.dispose(); }
+        return;
+      }
+      if (environmentLoading) return;
+      environmentLoading = true;
+      fetchEnvironmentBytes(new URL('media/headset-room.pmrem.gz', base), environmentAbort.signal).then(bytes => {
+        environmentLoading = false;
+        if (disposed || failed) return;
+        environmentBytes = bytes; prepareEnvironment();
+      }, () => {
+        environmentLoading = false;
+        if (disposed || failed) return;
+        environmentFailed = true; prepareEnvironment();
+      });
+    }
     frames = demandFrames({
       request: callback => window.requestAnimationFrame(callback),
       cancel: handle => window.cancelAnimationFrame(handle),
       hidden: () => document.hidden || failed,
       render: () => {
-        if (!model || disposed || failed) return;
+        if (!model || !prepared || disposed || failed) return;
         try {
           // Render into the hidden canvas first. Keep the actual-model preview
           // visible through shader/texture preparation, including a failed frame.
@@ -103,8 +162,29 @@ if (surface && canvas && fallback && status) {
       }
     });
     const redraw = () => {
-      if (model && !disposed && !failed && !document.hidden) frames.draw();
+      if (prepared && !disposed && !failed && !document.hidden) frames.draw();
     };
+    function prepareModel() {
+      if (!model || prepared || preparing || disposed || failed || document.hidden) return;
+      if (!environmentMap) { prepareEnvironment(); return; }
+      preparing = true;
+      surface.dataset.modelState = 'preparing';
+      const failedPreparation = () => {
+        preparing = false;
+        if (!disposed && !failed) showFallback();
+      };
+      try {
+        // Let supported drivers compile the exact scene's shaders in parallel.
+        // The static preview stays visible; input cannot force an early draw.
+        const compilation = typeof renderer.compileAsync === 'function' ? renderer.compileAsync(scene, camera) : undefined;
+        Promise.resolve(compilation).then(() => {
+          preparing = false;
+          if (disposed || failed) return;
+          prepared = true;
+          redraw();
+        }, failedPreparation);
+      } catch { failedPreparation(); }
+    }
     const resize = () => {
       if (disposed || failed) return;
       const box = surface.getBoundingClientRect();
@@ -113,7 +193,7 @@ if (surface && canvas && fallback && status) {
       renderer.setPixelRatio(Math.min(1.75, Math.max(1, window.devicePixelRatio || 1)));
       renderer.setSize(width, height, false);
       camera.aspect = width / height; camera.updateProjectionMatrix();
-      frames.draw();
+      redraw();
     };
     if (typeof ResizeObserver === 'function') {
       resizeObserver = new ResizeObserver(resize); resizeObserver.observe(surface);
@@ -125,13 +205,13 @@ if (surface && canvas && fallback && status) {
     listen(document, 'maestro:misprint', redraw);
     listen(document, 'visibilitychange', () => {
       if (document.hidden) { controls?.cancel(); frames.stop(); }
-      else redraw();
+      else { prepareEnvironment(); prepareModel(); redraw(); }
     });
     listen(window, 'pagehide', event => {
       if (event.persisted) { controls?.cancel(); frames.stop(); }
       else dispose();
     });
-    listen(window, 'pageshow', event => { if (event.persisted) resize(); redraw(); });
+    listen(window, 'pageshow', event => { if (event.persisted) resize(); prepareEnvironment(); prepareModel(); redraw(); });
     listen(canvas, 'webglcontextlost', event => { event.preventDefault(); showFallback(); });
     listen(fallback, 'error', () => {
       fallback.hidden = true;
@@ -148,6 +228,7 @@ if (surface && canvas && fallback && status) {
     });
     const loader = new GLTFLoader(manager);
     surface.dataset.modelState = 'loading';
+    prepareEnvironment();
     loader.load(new URL('media/vision-pro.glb', base).href, gltf => {
       if (disposed || failed) { disposeObject(gltf.scene); return; }
       model = gltf.scene;
@@ -167,6 +248,7 @@ if (surface && canvas && fallback && status) {
         }
       });
       resize();
+      prepareModel();
     }, undefined, showFallback);
     resize();
   } catch { showFallback(); }
