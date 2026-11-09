@@ -10,23 +10,23 @@
     {"src": "media/concept-tidal.webp", "width": 2048, "height": 1152, "name": "tidal room", "alt": "AI-generated concept art: a worn tiled room with still water, a narrow concrete walkway and suspended ink loops. An imagined setting, not app or headset footage."}
   ];
   const compositions = [
-    { voices: [
-      ["luna", 33, 45, 14, -22, 6, 12, -7, false, false],
-      ["seance", 64, 45, 17, 64, -11, -17, 8, false, true],
-      ["poly-perc", 47, 74, 18, 134, 12, -8, -5, false, true],
+    { featured: 'luna', name: 'Almost Asleep', voices: [
+      ["luna", 36, 43, 27, 72, 6, 12, -7, false, false],
+      ["seance", 68, 40, 13, 24, -11, -17, 8, false, true],
+      ["poly-perc", 49, 78, 14, 134, 12, -8, -5, false, true],
       ["glass-arp", 78, 66, 13, 22, 6, 18, 7, false, false]
     ], routes: ["M328 313v38h139v78m-8-12 8 12 6-15", "M640 299h71v31h50m-188 150h58m11 0h8"] },
-    { voices: [
-      ["seance", 29, 40, 16, -12, -8, 17, 4, true, false],
-      ["luna", 63, 29, 14, 24, 8, -12, -9, false, false],
-      ["glass-arp", 76, 65, 17, 114, -12, -19, 7, true, true],
-      ["finger-bass", 36, 76, 18, 148, 11, 9, -6, true, true]
+    { featured: 'seance', name: 'Someone Else', voices: [
+      ["seance", 31, 42, 27, 72, -8, 17, 4, true, false],
+      ["luna", 64, 25, 12, 24, 8, -12, -9, false, false],
+      ["glass-arp", 76, 66, 14, 114, -12, -19, 7, true, true],
+      ["poly-perc", 39, 78, 14, 148, 11, 9, -6, true, true]
     ], routes: ["M295 273h71v33h126m11 0h24m181 126h50v-43", "M368 481h86v-27h83m-10-8 10 8-13 2"] },
-    { voices: [
-      ["luna", 47, 29, 15, -32, 8, -12, -8, false, false],
-      ["glass-arp", 73, 43, 14, 34, -10, 16, 5, false, false],
-      ["finger-bass", 25, 71, 19, 142, -13, -16, -6, false, true],
-      ["tape-hymn", 65, 73, 16, 88, 12, -11, 9, false, true]
+    { featured: 'tape-hymn', name: 'An Old Feeling', voices: [
+      ["luna", 42, 25, 12, -32, 8, -12, -8, false, false],
+      ["glass-arp", 77, 28, 12, 34, -10, 16, 5, false, false],
+      ["finger-bass", 23, 72, 14, 142, -13, -16, -6, false, true],
+      ["tape-hymn", 63, 56, 27, 88, 12, -11, 9, false, false]
     ], routes: ["M252 455h91v-22h132m48-170h87v18h96m-12-8 12 8-14 2", "M638 472h53v-38h56m-390-250h32m11 0h7"] }
   ];
   const NS = 'http://www.w3.org/2000/svg';
@@ -58,10 +58,21 @@
     for (const [slug, x, y, size, depth, rx, ry, turn, light, fractured] of composition.voices) {
       const plane = document.createElement('span'); plane.className = 'portal-voice';
       plane.setAttribute('data-tone', light ? 'light' : 'ink');
+      plane.setAttribute('data-featured', String(slug === composition.featured));
+      plane.setAttribute('data-voice', slug);
       for (const [name, value] of Object.entries({ x: `${x}%`, y: `${y}%`, size: `${size}%`, z: `${depth}px`, rx: `${rx}deg`, ry: `${ry}deg`, turn: `${turn}deg` })) plane.style.setProperty(`--ink-${name}`, value);
       plane.append(nativeImage(slug));
       if (fractured) {
         const fragment = document.createElement('span'); fragment.className = 'portal-ink-fragment'; fragment.append(nativeImage(slug)); plane.append(fragment);
+      }
+      if (slug === composition.featured) {
+        const name = document.createElement('span');
+        name.className = 'portal-voice-name'; name.setAttribute('data-pen', slug);
+        name.textContent = composition.name; plane.append(name);
+        const Event = document.defaultView?.CustomEvent;
+        if (Event) document.dispatchEvent(new Event('maestro:pen-refresh', {
+          detail: { element: name, text: composition.name }
+        }));
       }
       nodes.push(plane);
     }
@@ -121,7 +132,7 @@
           current = selected;
           number();
           frame.setAttribute('aria-busy', 'false');
-          status.textContent = `Concept image ${current + 1} of ${images.length}: ${item.name}. AI-generated art, not headset footage.`;
+          status.textContent = `Concept image ${current + 1} of ${images.length}: ${item.name}, featuring ${compositions[selected].name}. AI-generated art, not headset footage.`;
         } catch { failed(); }
       }, { once: true });
       try { candidate.src = item.src; } catch { failed(); }

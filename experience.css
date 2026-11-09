@@ -41,11 +41,10 @@
 @media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.portal-world{transition:none}}
 @media(forced-colors:active){.portal-edge{display:none}.portal-outline{border-color:CanvasText}.portal-window{box-shadow:none}.concept-portal figcaption{color:CanvasText}}
 
-/* Film-only integration: native 16:9 pixels have no height cap or letterbox.
-   Grayscale/brightness lifts the rendered paper to white; multiply lets the
-   page's own paper show through. The downloadable film remains unchanged. */
+/* The film is rendered directly on the page's paper, with explicit color tags.
+   Preserve those pixels without a second paper tint or brightness correction. */
 .film-section .module-film{margin:0;background:var(--paper);isolation:isolate;border:0;box-shadow:none}
-.film-section .module-film video{display:block;width:100%;height:auto;max-height:none;aspect-ratio:16/9;object-fit:contain;background:transparent;border:0;border-radius:0;box-shadow:none;filter:grayscale(1) brightness(1.075);mix-blend-mode:multiply}
+.film-section .module-film video{display:block;width:100%;height:auto;max-height:none;aspect-ratio:16/9;object-fit:contain;background:var(--paper);border:0;border-radius:0;box-shadow:none;filter:none;mix-blend-mode:normal}
 .film-section .module-film video::cue{background:rgba(248,248,243,.92);color:#11130f;font:16px ui-monospace,monospace}
 .film-section .film-transport{display:grid;grid-template-columns:52px minmax(60px,1fr) 94px 58px 76px 54px;align-items:center;gap:12px;margin:0 5% 0 6%;padding:0;border:0;background:transparent;font-size:11px;line-height:1.3}
 .film-section .film-transport[hidden]{display:none}
@@ -162,3 +161,23 @@
 .experience-page .keepsake-layout .colophon-links a{font-size:10px}
 @media(max-width:580px){.hand-sound{left:12px;top:66px;bottom:auto}.experience-page .keepsake-layout .colophon-links{margin-top:12px}}
 @media(forced-colors:active){.experience-page :is(a,button,select):focus-visible{color:Highlight}.experience-page [data-play-hand]:focus-visible>path:first-child{stroke:Highlight}.experience-page .ink-instrument:focus-visible .pen-stroke{fill:Highlight}}
+
+/* The three-plane scene opens the page; the six-voice misprint returns below. */
+.arrival-section{position:relative;overflow:clip;isolation:isolate}
+.arrival-room{height:100svh;min-height:700px;max-height:960px}
+.arrival-hand>path:first-child{fill:var(--ink);stroke:var(--ink)}
+.arrival-hand>path:nth-child(2){stroke:var(--paper)}
+.arrival-section .hand-sound{left:24px;bottom:22px;top:auto}
+.return-section{padding:60px 0 0;overflow:clip}
+.return-cover .cover-hand>path:first-child{fill:var(--paper);stroke:var(--ink)}
+.return-cover .cover-hand>path:nth-child(2){stroke:var(--ink)}
+.concept-portal .portal-voice[data-featured=true]{max-width:310px}
+/* Supporting drawings keep their ink but yield the caption to one featured voice. */
+.concept-portal .portal-voice[data-featured=false]>img{clip-path:inset(16% 0 0)}
+@media(max-width:580px){.arrival-room{height:92svh;min-height:620px;max-height:820px}.arrival-room .depth-hand{left:24%}.arrival-room .voice-near{right:9%}.arrival-section .hand-sound{left:12px;bottom:14px}.return-section{padding-top:40px}}
+@media(forced-colors:active){.arrival-hand>path:first-child{fill:CanvasText;stroke:CanvasText}.arrival-hand>path:nth-child(2){stroke:Canvas}.return-cover .cover-hand>path:first-child{fill:Canvas;stroke:CanvasText}.return-cover .cover-hand>path:nth-child(2){stroke:CanvasText}}
+.concept-portal .portal-voice-name{position:absolute;display:block;left:-10%;top:96%;width:120%;font-size:clamp(16px,1.7vw,24px);line-height:1;color:var(--ink);text-align:center;pointer-events:none}
+.concept-portal .portal-voice-name .pen-stroke{stroke:var(--paper);stroke-width:1;stroke-linejoin:round;paint-order:stroke fill}
+.concept-portal .portal-voice[data-tone=light] .portal-voice-name{color:var(--paper)}
+.concept-portal .portal-voice[data-tone=light] .portal-voice-name .pen-stroke{stroke:var(--ink)}
+@media(forced-colors:active){.concept-portal .portal-voice-name{color:CanvasText}.concept-portal .portal-voice-name .pen-stroke{stroke:Canvas}}

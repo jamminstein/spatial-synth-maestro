@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three/three.module.js';
 import { GLTFLoader } from './vendor/three/GLTFLoader.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
-import { attachTrackball, demandFrames } from './headset-controls.mjs?v=20261109-hands5';
+import { attachTrackball, demandFrames } from './headset-controls.mjs?v=20261109-scenes3';
 import { createEnvironmentDecoder, createEnvironmentTexture, fetchEnvironmentBytes } from './headset-environment.mjs';
 
 // Local community mesh, embedded textures, direct manipulation. No animation

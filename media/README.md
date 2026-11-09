@@ -12,6 +12,12 @@ The warm-paper images preserve the native pixels at integer scale. Transparent n
 128×128 ink images are supplied alongside them. English sound-description captions are
 available in `module-film.vtt`.
 
+The film and poster are rendered on the website's `#f8f8f3` paper in sRGB.
+The MP4 identifies its BT.709 matrix/primaries, sRGB transfer and limited range;
+the poster identifies sRGB. The website displays them with normal blending and
+no color filter. Video/JPEG quantization can differ from the paper by one 8-bit
+color-channel step.
+
 The handwritten titles and short poems are drawn from an original coordinate alphabet,
 with seeded pressure, uneven spacing and displaced strokes. These same pen paths draw
 the website lettering; they are not a handwriting font or generated replacement artwork.
