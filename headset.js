@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three/three.module.js';
 import { GLTFLoader } from './vendor/three/GLTFLoader.js';
 import { RoomEnvironment } from './vendor/three/RoomEnvironment.js';
-import { attachTrackball, demandFrames } from './headset-controls.mjs';
+import { attachTrackball, demandFrames } from './headset-controls.mjs?v=20261109-hands5';
 import { createEnvironmentDecoder, createEnvironmentTexture, fetchEnvironmentBytes } from './headset-environment.mjs';
 
 // Local community mesh, embedded textures, direct manipulation. No animation
@@ -22,6 +22,15 @@ if (surface && canvas && fallback && status) {
     target.addEventListener(event, callback, options);
     listeners.push(() => target.removeEventListener(event, callback, options));
   };
+  // Protect the actual-model preview while WebGL is still loading as well.
+  for (const element of [surface, canvas, fallback]) element.setAttribute('draggable', 'false');
+  const preventNative = event => {
+    if (event.cancelable !== false) event.preventDefault();
+    event.stopPropagation();
+  };
+  for (const name of ['dragstart', 'selectstart', 'contextmenu']) {
+    listen(surface, name, preventNative, { capture: true, passive: false });
+  }
   const showFallback = () => {
     failed = true;
     environmentAbort.abort(); clearEnvironmentPreparation();
@@ -32,7 +41,7 @@ if (surface && canvas && fallback && status) {
     surface.setAttribute('aria-label', 'Apple Vision Pro headset, static rendering of the credited 3D model.');
     surface.removeAttribute('aria-describedby');
     surface.dataset.modelState = 'fallback';
-    status.textContent = 'Interactive 3D is unavailable here. The headset image and availability information remain available.';
+    status.textContent = 'Interactive 3D is unavailable here. A static rendering of the headset is shown.';
   };
   function disposeObject(object) {
     const geometries = new Set(), materials = new Set(), textures = new Set();
@@ -216,7 +225,7 @@ if (surface && canvas && fallback && status) {
     listen(fallback, 'error', () => {
       fallback.hidden = true;
       surface.dataset.imageMissing = 'true';
-      status.textContent = 'Headset preview unavailable. Open vision pro below for app availability.';
+      status.textContent = 'Headset preview unavailable. Spatial Synth Maestro is coming to Apple Vision Pro.';
     });
     const manager = new THREE.LoadingManager();
     const base = new URL('./', document.baseURI);

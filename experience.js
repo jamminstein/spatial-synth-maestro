@@ -27,6 +27,7 @@
     });
   });
   window.addEventListener('pagehide', () => media.forEach(pauseMedia));
+  document.addEventListener('maestro:hand-sound', () => media.forEach(pauseMedia));
 
   const filmStatus = document.getElementById('film-status');
   let restoreFilmFallback = () => {};

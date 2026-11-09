@@ -3,43 +3,31 @@
 // An explicit, quiet gallery. The visible image is replaced only after a new
 // image has loaded and decoded. No slideshow, preload queue or media controls.
 (() => {
+  // The selected sequence is weather, night glass, tidal (original 2, 3, 1).
   const images = [
-    { src: 'media/concept-tidal.webp', width: 2048, height: 1152, name: 'tidal room',
-      alt: 'AI-generated concept art: a worn tiled room with still water, a narrow concrete walkway and suspended ink loops. An imagined setting, not app or headset footage.' },
-    { src: 'media/concept-weather.webp', width: 2048, height: 1152, name: 'weather room',
-      alt: 'AI-generated concept art: a curved concrete room beneath an oval opening to a cloudy sky, with suspended ink lines and dots. An imagined setting, not app or headset footage.' },
-    { src: 'media/concept-night.webp', width: 2048, height: 1152, name: 'night glass',
-      alt: 'AI-generated concept art: a dim glass-roofed conservatory with weathered window frames, bare trees outside and suspended ink loops and lines. An imagined setting, not app or headset footage.' },
-    { src: 'media/concept-studio.webp', width: 1586, height: 992, name: 'sunlit studio',
-      alt: 'AI-generated concept art: an imagined sunlit studio with floating ink forms. An imagined setting, not app or headset footage.' }
+    {"src": "media/concept-weather.webp", "width": 2048, "height": 1152, "name": "weather room", "alt": "AI-generated concept art: a curved concrete room beneath an oval opening to a cloudy sky, with suspended ink lines and dots. An imagined setting, not app or headset footage."},
+    {"src": "media/concept-night.webp", "width": 2048, "height": 1152, "name": "night glass", "alt": "AI-generated concept art: a dim glass-roofed conservatory with weathered window frames, bare trees outside and suspended ink loops and lines. An imagined setting, not app or headset footage."},
+    {"src": "media/concept-tidal.webp", "width": 2048, "height": 1152, "name": "tidal room", "alt": "AI-generated concept art: a worn tiled room with still water, a narrow concrete walkway and suspended ink loops. An imagined setting, not app or headset footage."}
   ];
-  // Native engine glyphs are composed on transparent planes, not paper tiles.
-  // Each room keeps its window/door/sky visible and has a different score.
   const compositions = [
     { voices: [
-      ['luna', 47, 29, 15, -32, 8, -12, -8, false, false],
-      ['glass-arp', 73, 43, 14, 34, -10, 16, 5, false, false],
-      ['finger-bass', 25, 71, 19, 142, -13, -16, -6, false, true],
-      ['tape-hymn', 65, 73, 16, 88, 12, -11, 9, false, true]],
-      routes: ['M252 455h91v-22h132m48-170h87v18h96m-12-8 12 8-14 2', 'M638 472h53v-38h56m-390-250h32m11 0h7'] },
+      ["luna", 33, 45, 14, -22, 6, 12, -7, false, false],
+      ["seance", 64, 45, 17, 64, -11, -17, 8, false, true],
+      ["poly-perc", 47, 74, 18, 134, 12, -8, -5, false, true],
+      ["glass-arp", 78, 66, 13, 22, 6, 18, 7, false, false]
+    ], routes: ["M328 313v38h139v78m-8-12 8 12 6-15", "M640 299h71v31h50m-188 150h58m11 0h8"] },
     { voices: [
-      ['luna', 33, 45, 14, -22, 6, 12, -7, false, false],
-      ['seance', 64, 45, 17, 64, -11, -17, 8, false, true],
-      ['poly-perc', 47, 74, 18, 134, 12, -8, -5, false, true],
-      ['glass-arp', 78, 66, 13, 22, 6, 18, 7, false, false]],
-      routes: ['M328 313v38h139v78m-8-12 8 12 6-15', 'M640 299h71v31h50m-188 150h58m11 0h8'] },
+      ["seance", 29, 40, 16, -12, -8, 17, 4, true, false],
+      ["luna", 63, 29, 14, 24, 8, -12, -9, false, false],
+      ["glass-arp", 76, 65, 17, 114, -12, -19, 7, true, true],
+      ["finger-bass", 36, 76, 18, 148, 11, 9, -6, true, true]
+    ], routes: ["M295 273h71v33h126m11 0h24m181 126h50v-43", "M368 481h86v-27h83m-10-8 10 8-13 2"] },
     { voices: [
-      ['seance', 29, 40, 16, -12, -8, 17, 4, true, false],
-      ['luna', 63, 29, 14, 24, 8, -12, -9, false, false],
-      ['glass-arp', 76, 65, 17, 114, -12, -19, 7, true, true],
-      ['finger-bass', 36, 76, 18, 148, 11, 9, -6, true, true]],
-      routes: ['M295 273h71v33h126m11 0h24m181 126h50v-43', 'M368 481h86v-27h83m-10-8 10 8-13 2'] },
-    { voices: [
-      ['luna', 38, 29, 14, -28, 9, -14, -5, false, false],
-      ['glass-arp', 73, 37, 15, 35, -8, 15, 9, false, true],
-      ['poly-perc', 58, 69, 18, 124, 12, -12, -7, false, true],
-      ['seance', 22, 66, 16, 72, -8, 14, 6, false, false]],
-      routes: ['M379 210h94v29h127m11 0h21m-70 199h74v-43', 'M226 431h83v-29h96m-12-7 12 7-13 3'] }
+      ["luna", 47, 29, 15, -32, 8, -12, -8, false, false],
+      ["glass-arp", 73, 43, 14, 34, -10, 16, 5, false, false],
+      ["finger-bass", 25, 71, 19, 142, -13, -16, -6, false, true],
+      ["tape-hymn", 65, 73, 16, 88, 12, -11, 9, false, true]
+    ], routes: ["M252 455h91v-22h132m48-170h87v18h96m-12-8 12 8-14 2", "M638 472h53v-38h56m-390-250h32m11 0h7"] }
   ];
   const NS = 'http://www.w3.org/2000/svg';
   function nativeAsset(source, document) {

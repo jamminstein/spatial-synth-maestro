@@ -1,0 +1,13 @@
+/* A quiet end: only the actual app icon, built from its three native planes. */
+.experience-page .footer-icon-only{display:grid;place-items:center;min-height:440px;padding:95px 24px 115px;border:0;margin:0;background:var(--paper)}
+.maestro-footer-icon{--icon-x:0;--icon-y:0;display:block;position:relative;width:clamp(190px,24vw,290px);aspect-ratio:1;border:0;border-radius:50%;padding:0;perspective:850px;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;background:transparent;outline:none!important}
+.maestro-footer-icon .icon-volume{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(calc(-8deg - var(--icon-y) * 12deg)) rotateY(calc(-12deg + var(--icon-x) * 16deg));transition:transform .35s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.maestro-footer-icon .icon-plane{position:absolute;inset:0;display:block;border-radius:50%;overflow:hidden;pointer-events:none;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.maestro-footer-icon img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.maestro-footer-icon .icon-back{transform:translateZ(0);box-shadow:1px 4px 8px #11130f14,12px 30px 35px -18px #11130f38}
+.maestro-footer-icon .icon-middle{transform:translate3d(calc(var(--icon-x) * 4px),calc(var(--icon-y) * 4px),18px)}
+.maestro-footer-icon .icon-front{transform:translate3d(calc(var(--icon-x) * 9px),calc(var(--icon-y) * 9px),37px)}
+.maestro-footer-icon:focus-visible .icon-volume{filter:drop-shadow(0 0 5px var(--blue))}
+@media(max-width:580px){.experience-page .footer-icon-only{min-height:340px;padding:75px 24px 90px}}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.maestro-footer-icon .icon-volume,.maestro-footer-icon .icon-plane{transition:none}.maestro-footer-icon .icon-volume{transform:rotateX(-8deg) rotateY(-12deg)}}
+@media(forced-colors:active){.maestro-footer-icon:focus-visible .icon-volume{filter:drop-shadow(0 0 5px Highlight)}}

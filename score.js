@@ -295,7 +295,7 @@
       const reset = () => { room.style.setProperty('--pitch', '0deg'); room.style.setProperty('--yaw', '0deg');
         if (wide) { room.style.setProperty('--cover-follow-x', '0px'); room.style.setProperty('--cover-follow-y', '0px'); } };
       room.addEventListener('pointermove', event => {
-        if (reduced?.matches || !fine?.matches || (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return;
+        if (room.dataset.handGrabbed === 'true' || event.target?.closest?.('[data-play-hand]') || reduced?.matches || !fine?.matches || (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return;
         const rect = room.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
         const pose = (wide ? coverDepthPose : depthPose)((event.clientX - rect.left) / rect.width * 2 - 1, (event.clientY - rect.top) / rect.height * 2 - 1);
