@@ -3,7 +3,7 @@
 // A touch-sized excerpt of the actual native recording, never a replacement synth.
 // Nothing is fetched, decoded or connected until an explicit hand gesture arms it.
 (() => {
-  const SLUGS = new Set(['luna', 'glass-arp', 'finger-bass', 'poly-perc', 'seance', 'tape-hymn']);
+  const SLUGS = new Set(['finger-drums', 'finger-bass', 'finger-chords', 'acid-line', 'glass-arp', 'breath-noise']);
   const CUE_SECONDS = .78, ATTACK = .025, RELEASE = .055, GAIN = .12;
   const MAX_VOICES = 3, MAX_CUES = 8, ARM_MS = 12000, INTENT_MS = 1600, COOLDOWN_MS = 950;
 

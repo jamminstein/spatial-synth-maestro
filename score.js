@@ -89,7 +89,7 @@
   }
 
   const coverStates = new WeakMap();
-  const voiceIDs = ['luna', 'glass-arp', 'finger-bass', 'poly-perc', 'seance', 'tape-hymn'];
+  const voiceIDs = ['finger-drums', 'finger-bass', 'finger-chords', 'acid-line', 'glass-arp', 'breath-noise'];
   const coverFamilies = [
     [[17, 20, 15], [77, 34, 14], [87, 60, 13], [70, 86, 14], [26, 82, 15], [9, 52, 13]],
     [[28, 18, 14], [76, 34, 15], [85, 61, 14], [68, 86, 15], [22, 83, 13], [10, 49, 14]],
@@ -243,7 +243,7 @@
         Object.entries(plan).forEach(([key, value]) => ribbon.style.setProperty(`--ribbon-${key}`, `${value}${['pitch', 'yaw', 'roll'].includes(key) ? 'deg' : ['z', 'height'].includes(key) ? 'px' : '%'}`));
         const face = document.createElement('span'); face.className = 'ribbon-face';
         const drawing = document.createElement('img');
-        drawing.src = nativeAsset(index % 2 ? 'media/modules/poly-perc-native.png' : 'media/modules/seance-native.png', document);
+        drawing.src = nativeAsset(index % 2 ? 'media/modules/acid-line-native.png' : 'media/modules/glass-arp-native.png', document);
         drawing.alt = ''; drawing.width = 128; drawing.height = 128; drawing.setAttribute('aria-hidden', 'true');
         face.append(drawing); ribbon.append(face); world.append(ribbon);
       });

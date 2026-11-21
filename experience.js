@@ -61,12 +61,12 @@
       toggle.textContent = playing ? 'pause' : film.ended ? 'again' : 'play';
       toggle.setAttribute('aria-label', playing ? 'Pause film' : film.ended ? 'Replay film' : 'Play film');
       const length = duration();
-      const current = Number.isFinite(film.currentTime) ? clamp(film.currentTime, 0, length || 42) : 0;
+      const current = Number.isFinite(film.currentTime) ? clamp(film.currentTime, 0, length || 64) : 0;
       seek.disabled = !length;
-      seek.max = String(length || 42);
+      seek.max = String(length || 64);
       seek.value = String(current);
-      seek.setAttribute('aria-valuetext', `${clock(current)} of ${clock(length || 42)}`);
-      time.textContent = `${clock(current)} / ${clock(length || 42)}`;
+      seek.setAttribute('aria-valuetext', `${clock(current)} of ${clock(length || 64)}`);
+      time.textContent = `${clock(current)} / ${clock(length || 64)}`;
       const level = Number.isFinite(film.volume) ? clamp(film.volume, 0, 1) : 1;
       const quiet = film.muted || level === 0;
       volume.value = String(level);
@@ -164,7 +164,7 @@
   document.querySelectorAll('[data-film-start]').forEach(link => {
     link.addEventListener('click', () => {
       const seconds = Number(link.dataset.filmStart);
-      if (!Number.isFinite(seconds) || seconds < 0 || seconds >= 42) return;
+      if (!Number.isFinite(seconds) || seconds < 0 || seconds >= 64) return;
       pauseMedia(film);
       chapter = seconds;
       applyChapter();

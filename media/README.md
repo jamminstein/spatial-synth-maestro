@@ -1,8 +1,11 @@
 # About these sound studies
 
 The drawings and sound come from Spatial Synth Maestro's actual instrument engines.
-Each seven-second study pairs an instrument's native animated ink with its own synthesis.
-The 42-second film presents the same six studies in sequence.
+Each eight-second portrait pairs one of the club's six instruments with its own synthesis.
+The 64-second film opens with 16 seconds from the real six-voice AudioGraph, then presents
+rhythm (Private Ritual), bass (Below Thought), harmony (What We Keep), sequence
+(Restless Tongue), melody (Small Doubts), and texture (Open Window) individually.
+All seven passages use the same 120 BPM piece, seed `47e9fc3fa2ee17d3`.
 
 These are offline studio renders, not headset footage, app screenshots or an HRTF/spatial
 audio demonstration. No microphone input, user recordings or stock sound is used. Constant

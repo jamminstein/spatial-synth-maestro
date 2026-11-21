@@ -10,23 +10,23 @@
     {"src": "media/concept-tidal.webp", "width": 2048, "height": 1152, "name": "tidal room", "alt": "AI-generated concept art: a worn tiled room with still water, a narrow concrete walkway and suspended ink loops. An imagined setting, not app or headset footage."}
   ];
   const compositions = [
-    { featured: 'luna', name: 'Almost Asleep', voices: [
-      ["luna", 36, 43, 27, 72, 6, 12, -7, false, false],
-      ["seance", 68, 40, 13, 24, -11, -17, 8, false, true],
-      ["poly-perc", 49, 78, 14, 134, 12, -8, -5, false, true],
-      ["glass-arp", 78, 66, 13, 22, 6, 18, 7, false, false]
+    { featured: 'finger-drums', name: 'Private Ritual', voices: [
+      ["finger-drums", 36, 43, 27, 72, 6, 12, -7, false, false],
+      ["glass-arp", 68, 40, 13, 24, -11, -17, 8, false, true],
+      ["acid-line", 49, 78, 14, 134, 12, -8, -5, false, true],
+      ["finger-bass", 78, 66, 13, 22, 6, 18, 7, false, false]
     ], routes: ["M328 313v38h139v78m-8-12 8 12 6-15", "M640 299h71v31h50m-188 150h58m11 0h8"] },
-    { featured: 'seance', name: 'Someone Else', voices: [
-      ["seance", 31, 42, 27, 72, -8, 17, 4, true, false],
-      ["luna", 64, 25, 12, 24, 8, -12, -9, false, false],
-      ["glass-arp", 76, 66, 14, 114, -12, -19, 7, true, true],
-      ["poly-perc", 39, 78, 14, 148, 11, 9, -6, true, true]
+    { featured: 'glass-arp', name: 'Small Doubts', voices: [
+      ["glass-arp", 31, 42, 27, 72, -8, 17, 4, true, false],
+      ["finger-drums", 64, 25, 12, 24, 8, -12, -9, false, false],
+      ["finger-bass", 76, 66, 14, 114, -12, -19, 7, true, true],
+      ["acid-line", 39, 78, 14, 148, 11, 9, -6, true, true]
     ], routes: ["M295 273h71v33h126m11 0h24m181 126h50v-43", "M368 481h86v-27h83m-10-8 10 8-13 2"] },
-    { featured: 'tape-hymn', name: 'An Old Feeling', voices: [
-      ["luna", 42, 25, 12, -32, 8, -12, -8, false, false],
-      ["glass-arp", 77, 28, 12, 34, -10, 16, 5, false, false],
-      ["finger-bass", 23, 72, 14, 142, -13, -16, -6, false, true],
-      ["tape-hymn", 63, 56, 27, 88, 12, -11, 9, false, false]
+    { featured: 'breath-noise', name: 'Open Window', voices: [
+      ["finger-drums", 42, 25, 12, -32, 8, -12, -8, false, false],
+      ["finger-bass", 77, 28, 12, 34, -10, 16, 5, false, false],
+      ["finger-chords", 23, 72, 14, 142, -13, -16, -6, false, true],
+      ["breath-noise", 63, 56, 27, 88, 12, -11, 9, false, false]
     ], routes: ["M252 455h91v-22h132m48-170h87v18h96m-12-8 12 8-14 2", "M638 472h53v-38h56m-390-250h32m11 0h7"] }
   ];
   const NS = 'http://www.w3.org/2000/svg';
