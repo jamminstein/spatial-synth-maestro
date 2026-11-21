@@ -79,7 +79,7 @@ if (surface && canvas && fallback && status) {
     renderer.toneMappingExposure = 1.15;
     scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(34, 1, .1, 30);
-    camera.position.set(0, 0, 4.05); camera.lookAt(0, 0, 0);
+    camera.position.set(0, 0, 3.6); camera.lookAt(0, 0, 0);
     const pivot = new THREE.Group(); scene.add(pivot);
     // The exported GLB faces +Z, with +Y up. This is an initial view, not an
     // orbit limit: quaternion interaction can turn the entire model through 360°.
@@ -87,9 +87,9 @@ if (surface && canvas && fallback && status) {
     const home = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(
       new THREE.Vector3(-1.7, .85, 1.15), new THREE.Vector3(), new THREE.Vector3(0, 1, 0))).invert();
     pivot.quaternion.copy(home);
-    scene.add(new THREE.HemisphereLight(0xeaf3ff, 0x807b72, 1.1));
+    scene.add(new THREE.HemisphereLight(0xf4f3ef, 0x807b72, 1.1));
     const key = new THREE.DirectionalLight(0xffffff, 3.5); key.position.set(-3, 4, 5); scene.add(key);
-    const fill = new THREE.DirectionalLight(0xdce9ff, 1.5); fill.position.set(4, 1, 2); scene.add(fill);
+    const fill = new THREE.DirectionalLight(0xffffff, 1.5); fill.position.set(4, 1, 2); scene.add(fill);
     const rim = new THREE.DirectionalLight(0xffffff, 2.4); rim.position.set(1, 3, -4); scene.add(rim);
     scene.environmentIntensity = .85;
     function finishEnvironment(resource) {
@@ -171,7 +171,10 @@ if (surface && canvas && fallback && status) {
       }
     });
     const redraw = () => {
-      if (prepared && !disposed && !failed && !document.hidden) frames.draw();
+      if (!prepared || disposed || failed || document.hidden) return;
+      const box = surface.getBoundingClientRect();
+      if (box.top + box.height <= 0 || box.top >= (window.innerHeight || Infinity)) return;
+      frames.draw();
     };
     function prepareModel() {
       if (!model || prepared || preparing || disposed || failed || document.hidden) return;
@@ -197,9 +200,10 @@ if (surface && canvas && fallback && status) {
     const resize = () => {
       if (disposed || failed) return;
       const box = surface.getBoundingClientRect();
-      const width = Math.max(1, Math.min(380, Math.round(box.width)));
-      const height = Math.max(1, Math.min(340, Math.round(box.height)));
-      renderer.setPixelRatio(Math.min(1.75, Math.max(1, window.devicePixelRatio || 1)));
+      const width = Math.max(1, Math.round(box.width));
+      const height = Math.max(1, Math.round(box.height));
+      // Preserve the real aspect ratio and cap the enlarged drawing buffer.
+      renderer.setPixelRatio(Math.min(1.5, Math.max(1, window.devicePixelRatio || 1), 1280 / Math.max(width, height)));
       renderer.setSize(width, height, false);
       camera.aspect = width / height; camera.updateProjectionMatrix();
       redraw();
@@ -207,7 +211,7 @@ if (surface && canvas && fallback && status) {
     if (typeof ResizeObserver === 'function') {
       resizeObserver = new ResizeObserver(resize); resizeObserver.observe(surface);
     } else listen(window, 'resize', resize);
-    // Refresh the fixed canvas when page compositing changes. The existing
+    // Refresh the cover canvas when page compositing changes. The existing
     // scheduler coalesces event bursts and never queues another frame itself.
     listen(window, 'scroll', redraw, { passive: true });
     listen(window, 'scrollend', redraw, { passive: true });

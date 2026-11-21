@@ -48,3 +48,5 @@ The same room generator remains available when the packed data cannot be used.
 The footer uses 512-pixel exports of the actual visionOS AppIcon back, middle and
 front layers. They preserve the native artwork and transparency; CSS places the
 three layers at different depths and responds only to pointer movement.
+
+The six-voice opening gives every instrument a separate, full-contrast procedural handwritten name. Three embedded bitmap name strips are omitted only in that promotional grid to avoid duplicate labels. Native module assets and the complete audio stream are unchanged.

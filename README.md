@@ -2,7 +2,7 @@
 
 The public website, support guide and privacy policy for Spatial Synth Maestro, an instrument for Apple Vision Pro.
 
-The page combines native instrument drawings, an ensemble opening and six voice portraits, an original procedural pen alphabet, spatial fragments and clearly labeled concept artwork. Sound starts only after the visitor presses Play or deliberately grabs a hand and moves it over a drawing. Hand previews use the native clips at low gain, fade on release, and can be muted with the speaker control. Keyboard users can grab with Space, move with arrows, release with Escape and return the hand with Home. The app is being prepared for release; the floating headset identifies its platform.
+The page combines native instrument drawings, an ensemble opening and six voice portraits, an original procedural pen alphabet, spatial fragments and clearly labeled concept artwork. Sound starts only after the visitor presses Play or deliberately grabs a hand and moves it over a drawing. Hand previews use the native clips at low gain, fade on release, and can be muted with the speaker control. Keyboard users can grab with Space, move with arrows, release with Escape and return the hand with Home. The app is being prepared for release; the large draggable headset at the center of the cover identifies its platform. Its neutral lighting and keyboard focus marker add no blue glow; it stops redrawing when the cover is offscreen.
 
 This is a static site with no build step, third-party analytics or client-side credentials. GitHub Pages serves the repository root. Media provenance is in [media/README.md](media/README.md).
 
