@@ -190,3 +190,9 @@
 .arrival-section .arrival-room{z-index:2;pointer-events:none}
 .arrival-section .depth-voice{opacity:.58}
 @media(max-width:580px){.arrival-section .headset-widget{width:112vw;top:46%}.arrival-section .headset-view{aspect-ratio:1.18}}
+
+/* A shallow mouse parallax; the model itself still rotates only when held. */
+.arrival-section{--arrival-follow-x:0px;--arrival-follow-y:0px}
+.arrival-section .headset-widget{transform:translate(-50%,-50%) translate(calc(var(--arrival-follow-x) * -.55),calc(var(--arrival-follow-y) * -.55));transition:transform .22s ease-out}
+.arrival-section .depth-world{translate:var(--arrival-follow-x) var(--arrival-follow-y);transition:transform .22s ease-out,translate .22s ease-out}
+@media(hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.arrival-section{--arrival-follow-x:0px!important;--arrival-follow-y:0px!important}.arrival-section .headset-widget,.arrival-section .depth-world{transition:none}}

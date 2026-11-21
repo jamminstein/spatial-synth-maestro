@@ -287,22 +287,38 @@
     return { yaw: +(bounded(x) * 11).toFixed(3), pitch: +(-bounded(y) * 7).toFixed(3),
       x: +(bounded(x) * 32).toFixed(3), y: +(bounded(y) * 22).toFixed(3) };
   }
+  function arrivalDepthPose(x, y) {
+    const bounded = value => Number.isFinite(value) ? clamp(value, -1, 1) : 0;
+    return { yaw: +(bounded(x) * 2.5).toFixed(3), pitch: +(-bounded(y) * 1.5).toFixed(3),
+      x: +(bounded(x) * 10).toFixed(3), y: +(bounded(y) * 7).toFixed(3) };
+  }
   function installDepth(document, environment = globalThis) {
     const reduced = environment.matchMedia?.('(prefers-reduced-motion: reduce)');
     const fine = environment.matchMedia?.('(hover: hover) and (pointer: fine)');
     document.querySelectorAll('[data-depth-scene]').forEach(room => {
       const wide = room.dataset.depthResponse === 'cover';
-      const reset = () => { room.style.setProperty('--pitch', '0deg'); room.style.setProperty('--yaw', '0deg');
-        if (wide) { room.style.setProperty('--cover-follow-x', '0px'); room.style.setProperty('--cover-follow-y', '0px'); } };
+      const arrival = room.dataset.depthResponse === 'arrival';
+      const follow = arrival ? '--arrival-follow' : wide ? '--cover-follow' : null;
+      const grabbed = () => room.dataset.handGrabbed === 'true' ||
+        Boolean(room.querySelector?.('[data-hand-grabbed="true"], [data-dragging="true"]'));
+      const reset = () => {
+        room.style.setProperty('--pitch', '0deg'); room.style.setProperty('--yaw', '0deg');
+        if (follow) { room.style.setProperty(`${follow}-x`, '0px'); room.style.setProperty(`${follow}-y`, '0px'); }
+      };
+      // Hover changes CSS planes only. Held-pointer and keyboard grabs keep a
+      // stable surface, and headset quaternion rotation remains independent.
       room.addEventListener('pointermove', event => {
-        if (room.dataset.handGrabbed === 'true' || event.target?.closest?.('[data-play-hand]') || reduced?.matches || !fine?.matches || (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return;
+        if (grabbed() || event.buttons || event.target?.closest?.('[data-play-hand]') || reduced?.matches || !fine?.matches || (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen')) return;
         const rect = room.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        const pose = (wide ? coverDepthPose : depthPose)((event.clientX - rect.left) / rect.width * 2 - 1, (event.clientY - rect.top) / rect.height * 2 - 1);
+        const pose = (arrival ? arrivalDepthPose : wide ? coverDepthPose : depthPose)((event.clientX - rect.left) / rect.width * 2 - 1, (event.clientY - rect.top) / rect.height * 2 - 1);
         room.style.setProperty('--pitch', `${pose.pitch}deg`); room.style.setProperty('--yaw', `${pose.yaw}deg`);
-        if (wide) { room.style.setProperty('--cover-follow-x', `${pose.x}px`); room.style.setProperty('--cover-follow-y', `${pose.y}px`); }
+        if (follow) { room.style.setProperty(`${follow}-x`, `${pose.x}px`); room.style.setProperty(`${follow}-y`, `${pose.y}px`); }
       }, { passive: true });
-      room.addEventListener('pointerleave', reset, { passive: true });
+      room.addEventListener('pointerleave', () => { if (!grabbed()) reset(); }, { passive: true });
+      environment.addEventListener?.('blur', reset);
+      environment.addEventListener?.('pagehide', reset);
+      document.addEventListener?.('visibilitychange', () => { if (document.hidden) reset(); });
       reduced?.addEventListener('change', reset); fine?.addEventListener('change', reset);
     });
   }
@@ -330,5 +346,5 @@
     });
   }
   if (typeof document !== 'undefined') install(document);
-  if (typeof module !== 'undefined' && module.exports) module.exports = { nativeAsset, ink, fragments, decorate, install, nextSeed, freshSeed, depthPose, installDepth, noisePlanes, noisePaths, ribbons, coverComposition, coverDepthPose };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { nativeAsset, ink, fragments, decorate, install, nextSeed, freshSeed, depthPose, installDepth, noisePlanes, noisePaths, ribbons, coverComposition, coverDepthPose, arrivalDepthPose };
 })();
